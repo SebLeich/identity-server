@@ -1,16 +1,21 @@
+using IdentityServer.Entities;
+using IdentityServer.Helpers;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace IdentityServer
 {
     public class Program
     {
-        public static int Main(string[] args)
+        public async static Task<int> Main(string[] args)
         {
             Activity.DefaultIdFormat = ActivityIdFormat.W3C;
 
@@ -30,7 +35,20 @@ namespace IdentityServer
             try
             {
                 Log.Information("Starting host...");
-                CreateHostBuilder(args).Build().Run();
+
+                var webHost = CreateHostBuilder(args)
+                    .Build();
+
+                using (var scope = webHost.Services.CreateScope())
+                {
+                    IDSDbContext iDSDbContext = scope.ServiceProvider.GetRequiredService<IDSDbContext>();
+                    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                    await DbInitializer.InitializeAsync(iDSDbContext, userManager, roleManager);
+                }
+
+                webHost.Run();
+
                 return 0;
             }
             catch (Exception ex)

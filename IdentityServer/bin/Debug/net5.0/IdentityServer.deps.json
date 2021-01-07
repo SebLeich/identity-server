@@ -26,6 +26,7 @@
       "IdentityServer/1.0.0": {
         "dependencies": {
           "IdentityServer4": "4.1.1",
+          "IdentityServer4.AspNetIdentity": "4.1.1",
           "IdentityServer4.EntityFramework": "4.1.1",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.1",
           "Microsoft.EntityFrameworkCore.Design": "5.0.1",
@@ -374,6 +375,20 @@
         },
         "compile": {
           "lib/netcoreapp3.1/IdentityServer4.dll": {}
+        }
+      },
+      "IdentityServer4.AspNetIdentity/4.1.1": {
+        "dependencies": {
+          "IdentityServer4": "4.1.1"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/IdentityServer4.AspNetIdentity.dll": {
+            "assemblyVersion": "4.1.1.0",
+            "fileVersion": "4.1.1.0"
+          }
+        },
+        "compile": {
+          "lib/netcoreapp3.1/IdentityServer4.AspNetIdentity.dll": {}
         }
       },
       "IdentityServer4.EntityFramework/4.1.1": {
@@ -3385,6 +3400,13 @@
       "sha512": "sha512-PA7IYDMoUQQY7czXa8lmIorvMvLkbjUaWCpB9+guG6N4EvpyHWwsccDXrc/rHIKDdtXsqSgo5jIbsu3y7qOqww==",
       "path": "identityserver4/4.1.1",
       "hashPath": "identityserver4.4.1.1.nupkg.sha512"
+    },
+    "IdentityServer4.AspNetIdentity/4.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-lOLVj6VMezSK1UX9/tffW7doJ+Mw7dgAY3shaOvtNAQIJMLUAiFGimc3YEgAunC+vU0Lo1ZKGaqgHEM3N6H/fA==",
+      "path": "identityserver4.aspnetidentity/4.1.1",
+      "hashPath": "identityserver4.aspnetidentity.4.1.1.nupkg.sha512"
     },
     "IdentityServer4.EntityFramework/4.1.1": {
       "type": "package",

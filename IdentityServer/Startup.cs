@@ -1,13 +1,17 @@
+using IdentityServer.Entities;
 using IdentityServer.Helpers;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
@@ -43,6 +47,44 @@ namespace IdentityServer
                 .GetSection("ConnectionStrings")
                 .Get<ConnectionStringSettings>();
 
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<IDSDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings.
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 0;
+
+                // Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
+                // User settings.
+                options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = false;
+            });
+
+            services.AddCors(setup =>
+            {
+                setup.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyHeader();
+                    policy.AllowAnyMethod();
+                    policy.AllowAnyOrigin();
+                });
+            });
+
+            services.AddDbContext<IDSDbContext>(options =>
+                options.UseSqlServer(connectionStringSettings.DbConnection));
+
             services
                 .AddIdentityServer(options =>
                 {
@@ -61,7 +103,7 @@ namespace IdentityServer
                 {
                     options.ConfigureDbContext = b => b.UseSqlServer(connectionStringSettings.DbConnection, sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
-                .AddUser
+                .AddAspNetIdentity<User>();
 
             services.AddControllersWithViews();
             services.AddLocalApiAuthentication(principal =>
@@ -70,6 +112,12 @@ namespace IdentityServer
 
                 return Task.FromResult(principal);
             });
+
+            var cors = new DefaultCorsPolicyService(new LoggerFactory().CreateLogger<DefaultCorsPolicyService>())
+            {
+                AllowAll = true
+            };
+            services.AddSingleton<ICorsPolicyService>(cors);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,6 +140,8 @@ namespace IdentityServer
                 endpoints.MapDefaultControllerRoute();
             });
 
+            app.UseCors();
+
             InitializeDatabase(app);
         }
 
@@ -101,11 +151,18 @@ namespace IdentityServer
         /// <param name="app">application builder</param>
         private void InitializeDatabase(IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
+            using (
+                var serviceScope = app
+                    .ApplicationServices
+                    .GetService<IServiceScopeFactory>()
+                    .CreateScope()
+            ){
                 serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
 
-                var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+                var context = serviceScope
+                    .ServiceProvider
+                    .GetRequiredService<ConfigurationDbContext>();
+
                 context.Database.Migrate();
 
                 if (!context.Clients.Any())

@@ -19,8 +19,8 @@ namespace IdentityServer.Configuration
                     ClientSecrets = { new Secret("secret".Sha256()) },
 
                     RedirectUris = { "https://localhost:44303/signin-oidc" },
-                    PostLogoutRedirectUris = { "http://localhost:44303/" },
-                    FrontChannelLogoutUri = "http://localhost:44303/signout-oidc",
+                    PostLogoutRedirectUris = { "https://localhost:44303/" },
+                    FrontChannelLogoutUri = "https://localhost:44303/signout-oidc",
 
                     AllowedScopes = Resources
                         .IdentityResources

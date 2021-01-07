@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "z9TsM+yDlXzDBoyiKIy3p0Bvh6OYRk2A/65hISonHD7IsEQKrD94yRjMjcoHmczBJb7qul/CcgS/8NkdoyLTTA==",
+  "dgSpecHash": "7wT5gyDhbuOLIIp1mvw2rBOLIzWyjs76NmZVD80dG3XYQ79vp/7lhm4PvV54gzKVsHJ+cWDIyYGGZIa7wDDyiw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Leichsenring\\source\\repos\\IdentityServer\\IdentityServer\\IdentityServer.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "C:\\Users\\Leichsenring\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Leichsenring\\.nuget\\packages\\identitymodel\\4.4.0\\identitymodel.4.4.0.nupkg.sha512",
     "C:\\Users\\Leichsenring\\.nuget\\packages\\identityserver4\\4.1.1\\identityserver4.4.1.1.nupkg.sha512",
+    "C:\\Users\\Leichsenring\\.nuget\\packages\\identityserver4.aspnetidentity\\4.1.1\\identityserver4.aspnetidentity.4.1.1.nupkg.sha512",
     "C:\\Users\\Leichsenring\\.nuget\\packages\\identityserver4.entityframework\\4.1.1\\identityserver4.entityframework.4.1.1.nupkg.sha512",
     "C:\\Users\\Leichsenring\\.nuget\\packages\\identityserver4.entityframework.storage\\4.1.1\\identityserver4.entityframework.storage.4.1.1.nupkg.sha512",
     "C:\\Users\\Leichsenring\\.nuget\\packages\\identityserver4.storage\\4.1.1\\identityserver4.storage.4.1.1.nupkg.sha512",
