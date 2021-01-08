@@ -25,7 +25,32 @@ namespace IdentityServer.Configuration
                     AllowedScopes = Resources
                         .IdentityResources
                         .Select(x => x.Name)
-                        .ToList()
+                        .ToList(),
+
+                    ClientClaimsPrefix = "",
+                    AlwaysSendClientClaims = true,
+                    AlwaysIncludeUserClaimsInIdToken = true
+                }, new Client
+                {
+                    ClientId = "TicketMVC",
+
+                    Enabled = true,
+                    AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
+                    AllowOfflineAccess = true,
+                    ClientSecrets = { new Secret("secret".Sha256()) },
+
+                    RedirectUris = { "https://localhost:40000/signin-oidc" },
+                    PostLogoutRedirectUris = { "https://localhost:40000/" },
+                    FrontChannelLogoutUri = "https://localhost:40000/signout-oidc",
+
+                    AllowedScopes = Resources
+                        .IdentityResources
+                        .Select(x => x.Name)
+                        .ToList(),
+
+                    ClientClaimsPrefix = "",
+                    AlwaysSendClientClaims = true,
+                    AlwaysIncludeUserClaimsInIdToken = true
                 }
             };
 

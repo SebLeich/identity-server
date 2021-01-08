@@ -12,6 +12,10 @@ namespace IdentityServer.Configuration
                 new IdentityRole
                 {
                     Name = "Administrator"
+                },
+                new IdentityRole
+                {
+                    Name = "Benutzer"
                 }
             };
             return roles;

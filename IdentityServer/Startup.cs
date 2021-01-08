@@ -1,5 +1,6 @@
 using IdentityServer.Entities;
 using IdentityServer.Helpers;
+using IdentityServer.Services;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Services;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -103,7 +105,8 @@ namespace IdentityServer
                 {
                     options.ConfigureDbContext = b => b.UseSqlServer(connectionStringSettings.DbConnection, sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
-                .AddAspNetIdentity<User>();
+                .AddAspNetIdentity<User>()
+                .AddProfileService<ProfileService>();
 
             services.AddControllersWithViews();
             services.AddLocalApiAuthentication(principal =>
@@ -165,14 +168,20 @@ namespace IdentityServer
 
                 context.Database.Migrate();
 
-                if (!context.Clients.Any())
+                var changedClients = 0;
+
+                foreach (var client in Configuration.Clients.Get())
                 {
-                    foreach (var client in Configuration.Clients.Get())
+                    var persistedObject = context.Clients.Where(x => x.ClientId == client.ClientId).FirstOrDefault();
+                    if(persistedObject == null)
                     {
+                        Log.Logger.Information($"add new client: {client.ClientId}");
                         context.Clients.Add(client.ToEntity());
+                        changedClients++;
                     }
-                    context.SaveChanges();
                 }
+
+                if(changedClients > 0) context.SaveChanges();
 
                 if (!context.IdentityResources.Any())
                 {

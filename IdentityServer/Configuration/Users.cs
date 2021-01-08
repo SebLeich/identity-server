@@ -9,7 +9,8 @@ namespace IdentityServer.Configuration
         {
             var users = new List<User>
             {
-                new User { UserName = "Administrator", Email = "admin@identity-domain.cpls", LockoutEnabled = false }
+                new User { UserName = "Administrator", Email = "admin@identity-domain.cpls", LockoutEnabled = false },
+                new User { UserName = "Benutzer", Email = "user@identity-domain.cpls", LockoutEnabled = true }
             };
 
             return users;
@@ -21,6 +22,8 @@ namespace IdentityServer.Configuration
             {
                 case "Administrator":
                     return "Cpls-2020";
+                case "Benutzer":
+                    return "12345678";
             }
             return null;
         }
@@ -31,6 +34,8 @@ namespace IdentityServer.Configuration
             {
                 case "Administrator":
                     return new List<string> { "Administrator" };
+                case "Benutzer":
+                    return new List<string> { "Benutzer" };
             }
 
             return null;
