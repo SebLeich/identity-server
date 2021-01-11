@@ -94,7 +94,6 @@ namespace IdentityServer
                     options.Events.RaiseFailureEvents = true;
                     options.Events.RaiseErrorEvents = true;
                 })
-                .AddDeveloperSigningCredential()
                 .AddOperationalStore(options =>
                 {
                     options.EnableTokenCleanup = true;
@@ -106,7 +105,8 @@ namespace IdentityServer
                     options.ConfigureDbContext = b => b.UseSqlServer(connectionStringSettings.DbConnection, sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
                 .AddAspNetIdentity<User>()
-                .AddProfileService<ProfileService>();
+                .AddProfileService<ProfileService>()
+                .AddDeveloperSigningCredential();
 
             services.AddControllersWithViews();
             services.AddLocalApiAuthentication(principal =>

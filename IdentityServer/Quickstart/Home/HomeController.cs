@@ -29,6 +29,8 @@ namespace IdentityServerHost.Quickstart.UI
 
         public IActionResult Index()
         {
+            return View();
+            /*
             if (_environment.IsDevelopment())
             {
                 // only show in development
@@ -37,6 +39,7 @@ namespace IdentityServerHost.Quickstart.UI
 
             _logger.LogInformation("Homepage is disabled in production. Returning 404.");
             return NotFound();
+            */
         }
 
         /// <summary>
